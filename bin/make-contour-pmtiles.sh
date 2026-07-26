@@ -20,10 +20,15 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 source "$SCRIPT_DIR/lib/check-deps.sh"
 # shellcheck source=bin/lib/build-vrt.sh
 source "$SCRIPT_DIR/lib/build-vrt.sh"
+# shellcheck source=bin/lib/extract-contours.sh
+source "$SCRIPT_DIR/lib/extract-contours.sh"
 
 INPUT_DIR="${INPUT_DIR:-$REPO_ROOT/tif}"
 BUILD_DIR="${BUILD_DIR:-$REPO_ROOT/build}"
 MERGED_VRT="$BUILD_DIR/merged.vrt"
+CONTOURS_10M_NDJSON="$BUILD_DIR/contours-10m.ndjson"
+CONTOURS_100M_NDJSON="$BUILD_DIR/contours-100m.ndjson"
+CONTOURS_500M_NDJSON="$BUILD_DIR/contours-500m.ndjson"
 
 step_build_vrt() {
   echo "[1/6] VRT統合: $INPUT_DIR 配下のGeoTIFFを $MERGED_VRT に統合します"
@@ -33,7 +38,18 @@ step_build_vrt() {
 }
 
 step_extract_contours() {
-  echo "[2/6] 等高線抽出（ndjson生成）: 未実装（Issue #3で実装予定）"
+  echo "[2/6] 等高線抽出（ndjson生成）: 10m/100m/500m間隔でndjsonを生成します"
+
+  extract_contours "$MERGED_VRT" 10 "$CONTOURS_10M_NDJSON"
+  verify_ndjson_features "$CONTOURS_10M_NDJSON" elevation
+
+  extract_contours "$MERGED_VRT" 100 "$CONTOURS_100M_NDJSON"
+  verify_ndjson_features "$CONTOURS_100M_NDJSON" elevation
+
+  extract_contours "$MERGED_VRT" 500 "$CONTOURS_500M_NDJSON"
+  verify_ndjson_features "$CONTOURS_500M_NDJSON" elevation
+
+  echo "[2/6] 等高線抽出（ndjson生成）: 完了（$CONTOURS_10M_NDJSON, $CONTOURS_100M_NDJSON, $CONTOURS_500M_NDJSON）"
 }
 
 step_simplify_and_smooth() {

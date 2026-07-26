@@ -11,9 +11,9 @@
 
 ## 3. 等高線抽出ステップ (Issue: #3)
 
-- [ ] 3.1 VRTから`gdal_contour -f GeoJSONSeq -i 10 -a elevation`で10m間隔のndjsonを生成する処理を実装する
-- [ ] 3.2 同様に100m間隔・500m間隔のndjsonを生成する処理を実装する（`-i 100`, `-i 500`）
-- [ ] 3.3 生成された3つのndjsonの各行が有効なGeoJSON Featureとしてパースでき、標高値の属性を持つことを確認する
+- [x] 3.1 VRTから`gdal_contour -f GeoJSONSeq -i 10 -a elevation`で10m間隔のndjsonを生成する処理を実装する
+- [x] 3.2 同様に100m間隔・500m間隔のndjsonを生成する処理を実装する（`-i 100`, `-i 500`）
+- [x] 3.3 生成された3つのndjsonの各行が有効なGeoJSON Featureとしてパースでき、標高値の属性を持つことを確認する
 
 ## 4. 簡略化・平滑化ステップ (Issue: #4)
 
