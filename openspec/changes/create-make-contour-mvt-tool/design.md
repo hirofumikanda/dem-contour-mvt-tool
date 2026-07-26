@@ -40,6 +40,8 @@ GDAL・tippecanoe・tile-join・pmtilesはいずれもCLIツールであり、�
 - 適用順序を「簡略化→平滑化」にする理由: 先に平滑化すると頂点数が増え、後段の簡略化アルゴリズムの効きが変わり計算量も増える。先に間引いてから滑らかにする方が、狙った簡略度を保ちながら見た目を改善できる。
 - 10m間隔（z14）は簡略化・平滑化を行わない（原設計どおり、最高詳細ズームでは原形状を保持）。
 - 代替案: シェイプリー（shapely）の`simplify()`はDouglas-PeuckerのみでVisvalingamに非対応のため不採用。トポロジー保持の観点でmapshaperを採用（`-simplify`はデフォルトで自己交差の修復<no-repair指定なし>を行う）。
+- 実装時の追補（頂点数増加の回避）: Chaikinの1反復は頂点数をほぼ2倍にするため、簡略化で強く間引かれた小さなライン（局所ピークを囲む短いループ等）では、固定の反復回数を適用すると簡略化前の頂点数を上回ってしまうことが実データで判明した（例: 100m間隔の一部ラインで20点→簡略化後5点→Chaikin2回で20点、正味の減少なし）。この対策として、Chaikin適用前のndjson（＝簡略化前のオリジナル頂点数）を「予算」として各Featureに渡し、`予算を下回る範囲で最大の反復回数`をFeatureごとに自動選択するようにした（`bin/lib/chaikin_smooth.py`の`--budget-ndjson`）。これにより全Featureで「簡略化・平滑化後の頂点数 < 簡略化前の頂点数」を厳密に満たす。
+- 実装時の追補（自己交差判定の実装手段）: 簡略化・平滑化後のラインは数千頂点規模になることがあり、純Pythonの総当たり（O(n^2)）自己交差判定は現実的な時間で終わらないことが実データで判明した。そのため、自己交差判定と最大逸脱距離の計算に限り、GEOS（shapely）の`is_simple`/`distance`を利用する（`bin/lib/verify_simplification.py`）。Chaikin平滑化自体は引き続き標準ライブラリのみで実装している。`bin/lib/check-deps.sh`はPythonモジュールとして`shapely`が利用可能かも検証する。
 
 ### 4. タイル生成はtippecanoeで間隔ごとに個別MBTilesを作り、tile-joinで統合する
 - `tippecanoe -o <interval>.mbtiles -Z<min> -z<max> -l contours -L<layer> <ndjson>`のように、10m/100m/500mそれぞれ独立にMBTilesを生成する。ズーム範囲が重ならない設計（z7-10 / z11-13 / z14）のため、レイヤー名を共通（例: `contours`）にしても同一ズームで複数間隔が競合しない。
