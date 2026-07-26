@@ -34,10 +34,10 @@
 
 ## 6. MBTiles統合とPMTiles変換 (Issue: #6)
 
-- [ ] 6.1 `tile-join`で10m用・100m用・500m用の3つのMBTilesを1つのMBTilesに統合する処理を実装する
-- [ ] 6.2 統合MBTilesのメタデータのズーム範囲がz7-z14であることを確認する
-- [ ] 6.3 `pmtiles convert`で統合MBTilesをPMTilesに変換する処理を実装する
-- [ ] 6.4 生成したPMTilesを`pmtiles show`/`pmtiles verify`で検証し、破損なく読み込めることを確認する
+- [x] 6.1 `tile-join`で10m用・100m用・500m用の3つのMBTilesを1つのMBTilesに統合する処理を実装する
+- [x] 6.2 統合MBTilesのメタデータのズーム範囲がz7-z14であることを確認する
+- [x] 6.3 `pmtiles convert`で統合MBTilesをPMTilesに変換する処理を実装する
+- [x] 6.4 生成したPMTilesを`pmtiles show`/`pmtiles verify`で検証し、破損なく読み込めることを確認する
 
 ## 7. パイプライン統合と実行 (Issue: #7)
 

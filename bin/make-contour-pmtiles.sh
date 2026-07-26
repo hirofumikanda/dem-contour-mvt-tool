@@ -26,6 +26,8 @@ source "$SCRIPT_DIR/lib/extract-contours.sh"
 source "$SCRIPT_DIR/lib/simplify-and-smooth.sh"
 # shellcheck source=bin/lib/generate-tiles.sh
 source "$SCRIPT_DIR/lib/generate-tiles.sh"
+# shellcheck source=bin/lib/merge-and-convert.sh
+source "$SCRIPT_DIR/lib/merge-and-convert.sh"
 
 INPUT_DIR="${INPUT_DIR:-$REPO_ROOT/tif}"
 BUILD_DIR="${BUILD_DIR:-$REPO_ROOT/build}"
@@ -38,6 +40,8 @@ CONTOURS_500M_SIMPLIFIED_NDJSON="$BUILD_DIR/contours-500m.simplified.ndjson"
 TILES_10M_MBTILES="$BUILD_DIR/contours-10m.mbtiles"
 TILES_100M_MBTILES="$BUILD_DIR/contours-100m.mbtiles"
 TILES_500M_MBTILES="$BUILD_DIR/contours-500m.mbtiles"
+COMBINED_MBTILES="$BUILD_DIR/contours.mbtiles"
+OUTPUT_PMTILES="$BUILD_DIR/contours.pmtiles"
 
 step_build_vrt() {
   echo "[1/6] VRT統合: $INPUT_DIR 配下のGeoTIFFを $MERGED_VRT に統合します"
@@ -86,11 +90,21 @@ step_generate_tiles() {
 }
 
 step_merge_tiles() {
-  echo "[5/6] MBTiles統合: 未実装（Issue #6で実装予定）"
+  echo "[5/6] MBTiles統合: 10m/100m/500m用MBTilesを1つに統合します"
+
+  merge_mbtiles "$COMBINED_MBTILES" "$TILES_10M_MBTILES" "$TILES_100M_MBTILES" "$TILES_500M_MBTILES"
+  verify_mbtiles_zoom_range "$COMBINED_MBTILES" 7 14
+
+  echo "[5/6] MBTiles統合: 完了（$COMBINED_MBTILES, z7-z14）"
 }
 
 step_convert_to_pmtiles() {
-  echo "[6/6] PMTiles変換: 未実装（Issue #6で実装予定）"
+  echo "[6/6] PMTiles変換: 統合MBTilesをPMTilesに変換します"
+
+  convert_to_pmtiles "$COMBINED_MBTILES" "$OUTPUT_PMTILES"
+  verify_pmtiles "$OUTPUT_PMTILES"
+
+  echo "[6/6] PMTiles変換: 完了（$OUTPUT_PMTILES）"
 }
 
 main() {
@@ -107,7 +121,7 @@ main() {
   step_merge_tiles
   step_convert_to_pmtiles
 
-  echo "パイプライン骨格の実行が完了しました（各ステップの実処理は今後のIssueで実装されます）"
+  echo "パイプラインの実行が完了しました: $OUTPUT_PMTILES"
 }
 
 main "$@"
