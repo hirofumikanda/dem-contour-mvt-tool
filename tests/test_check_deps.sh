@@ -12,7 +12,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 CHECK_DEPS="$REPO_ROOT/bin/lib/check-deps.sh"
 BASH_BIN="$(command -v bash)"
 
-REQUIRED_COMMANDS=(gdalbuildvrt gdal_contour mapshaper tippecanoe tile-join pmtiles python3)
+REQUIRED_COMMANDS=(gdalbuildvrt gdal_contour mapshaper tippecanoe tile-join pmtiles python3 sqlite3)
 
 fail() {
   echo "FAIL: $1" >&2

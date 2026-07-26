@@ -47,6 +47,7 @@ GDAL・tippecanoe・tile-join・pmtilesはいずれもCLIツールであり、�
 - `tippecanoe -o <interval>.mbtiles -Z<min> -z<max> -l contours -L<layer> <ndjson>`のように、10m/100m/500mそれぞれ独立にMBTilesを生成する。ズーム範囲が重ならない設計（z7-10 / z11-13 / z14）のため、レイヤー名を共通（例: `contours`）にしても同一ズームで複数間隔が競合しない。
 - 生成した3つのMBTilesは`tile-join -o combined.mbtiles a.mbtiles b.mbtiles c.mbtiles`で1つのMBTilesに統合し、最後に`pmtiles convert combined.mbtiles output.pmtiles`でPMTiles化する。
 - 代替案: 最初から1本のndjsonを結合してtippecanoe1回で処理する → 間隔ごとに簡略化パラメータが異なり、ズーム範囲も別々に指定する必要があるため、個別生成＋tile-join統合の方が制御しやすく採用。
+- 実装時の追補（tippecanoe自身の内部簡略化を無効化）: `--no-line-simplification`を指定せずに生成すると、tippecanoeはそのデータセットのmaxzoom（例: 100m間隔ならz13）であっても内部の簡略化アルゴリズムでラインの頂点を間引くことを実データで確認した（例: 事前に簡略化・平滑化した10頂点のラインがz13タイル内で8頂点に減少）。Visvalingam簡略化・Chaikin平滑化で意図的に作った形状をtippecanoe側で上書きさせないよう、全てのtippecanoe呼び出しに`--no-line-simplification`を指定する。サンプルデータでは`--force`（既存出力の上書き）と合わせてもタイルサイズに関する警告は出ないことを確認済み。
 
 ### 5. 中間生成物はビルドディレクトリ（例: `build/`）配下に間隔・ズームがわかるファイル名で出力する
 再実行時のデバッグ・部分的な再生成を容易にするため、`build/merged.vrt`, `build/contours-10m.ndjson`, `build/contours-100m.simplified.ndjson`, `build/contours-10m.mbtiles`等、各ステップの成果物を明示的なファイルとして残す。
