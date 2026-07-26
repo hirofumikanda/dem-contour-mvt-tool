@@ -6,8 +6,8 @@
 
 ## 2. VRT統合ステップ (Issue: #2)
 
-- [ ] 2.1 `tif/`配下のGeoTIFF群を入力に`gdalbuildvrt`でVRTを生成する処理を実装する（NoData値 -9999 を `-srcnodata`/`-vrtnodata` で明示）
-- [ ] 2.2 生成したVRTに対し`gdalinfo`でNoData値・範囲が想定どおりであることを確認する検証コマンドを実装（またはテストに組み込む）
+- [x] 2.1 `tif/`配下のGeoTIFF群を入力に`gdalbuildvrt`でVRTを生成する処理を実装する（NoData値 -9999 を `-srcnodata`/`-vrtnodata` で明示）
+- [x] 2.2 生成したVRTに対し`gdalinfo`でNoData値・範囲が想定どおりであることを確認する検証コマンドを実装（またはテストに組み込む）
 
 ## 3. 等高線抽出ステップ (Issue: #3)
 
