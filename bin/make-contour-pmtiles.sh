@@ -22,6 +22,8 @@ source "$SCRIPT_DIR/lib/check-deps.sh"
 source "$SCRIPT_DIR/lib/build-vrt.sh"
 # shellcheck source=bin/lib/extract-contours.sh
 source "$SCRIPT_DIR/lib/extract-contours.sh"
+# shellcheck source=bin/lib/simplify-and-smooth.sh
+source "$SCRIPT_DIR/lib/simplify-and-smooth.sh"
 
 INPUT_DIR="${INPUT_DIR:-$REPO_ROOT/tif}"
 BUILD_DIR="${BUILD_DIR:-$REPO_ROOT/build}"
@@ -29,6 +31,8 @@ MERGED_VRT="$BUILD_DIR/merged.vrt"
 CONTOURS_10M_NDJSON="$BUILD_DIR/contours-10m.ndjson"
 CONTOURS_100M_NDJSON="$BUILD_DIR/contours-100m.ndjson"
 CONTOURS_500M_NDJSON="$BUILD_DIR/contours-500m.ndjson"
+CONTOURS_100M_SIMPLIFIED_NDJSON="$BUILD_DIR/contours-100m.simplified.ndjson"
+CONTOURS_500M_SIMPLIFIED_NDJSON="$BUILD_DIR/contours-500m.simplified.ndjson"
 
 step_build_vrt() {
   echo "[1/6] VRT統合: $INPUT_DIR 配下のGeoTIFFを $MERGED_VRT に統合します"
@@ -53,7 +57,12 @@ step_extract_contours() {
 }
 
 step_simplify_and_smooth() {
-  echo "[3/6] 簡略化・平滑化（Visvalingam + Chaikin）: 未実装（Issue #4で実装予定）"
+  echo "[3/6] 簡略化・平滑化: 100m/500m間隔にVisvalingam簡略化+Chaikin平滑化を適用します（10mは対象外）"
+
+  simplify_and_smooth "$CONTOURS_100M_NDJSON" "$CONTOURS_100M_SIMPLIFIED_NDJSON" "$SIMPLIFY_PERCENTAGE_100M"
+  simplify_and_smooth "$CONTOURS_500M_NDJSON" "$CONTOURS_500M_SIMPLIFIED_NDJSON" "$SIMPLIFY_PERCENTAGE_500M"
+
+  echo "[3/6] 簡略化・平滑化: 完了（10m間隔 $CONTOURS_10M_NDJSON は未加工のまま次段へ渡します）"
 }
 
 step_generate_tiles() {

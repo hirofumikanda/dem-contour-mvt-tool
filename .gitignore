@@ -2,3 +2,5 @@ tif/
 .claude/
 build/*
 !build/.gitkeep
+__pycache__/
+*.pyc
