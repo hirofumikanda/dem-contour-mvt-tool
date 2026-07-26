@@ -18,12 +18,18 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # shellcheck source=bin/lib/check-deps.sh
 source "$SCRIPT_DIR/lib/check-deps.sh"
+# shellcheck source=bin/lib/build-vrt.sh
+source "$SCRIPT_DIR/lib/build-vrt.sh"
 
 INPUT_DIR="${INPUT_DIR:-$REPO_ROOT/tif}"
 BUILD_DIR="${BUILD_DIR:-$REPO_ROOT/build}"
+MERGED_VRT="$BUILD_DIR/merged.vrt"
 
 step_build_vrt() {
-  echo "[1/6] VRT統合: 未実装（Issue #2で実装予定）"
+  echo "[1/6] VRT統合: $INPUT_DIR 配下のGeoTIFFを $MERGED_VRT に統合します"
+  build_vrt "$INPUT_DIR" "$MERGED_VRT"
+  verify_vrt_nodata "$MERGED_VRT" "$DEM_NODATA_VALUE"
+  echo "[1/6] VRT統合: 完了（NoData=$DEM_NODATA_VALUE を確認）"
 }
 
 step_extract_contours() {
