@@ -24,6 +24,8 @@ source "$SCRIPT_DIR/lib/build-vrt.sh"
 source "$SCRIPT_DIR/lib/extract-contours.sh"
 # shellcheck source=bin/lib/simplify-and-smooth.sh
 source "$SCRIPT_DIR/lib/simplify-and-smooth.sh"
+# shellcheck source=bin/lib/generate-tiles.sh
+source "$SCRIPT_DIR/lib/generate-tiles.sh"
 
 INPUT_DIR="${INPUT_DIR:-$REPO_ROOT/tif}"
 BUILD_DIR="${BUILD_DIR:-$REPO_ROOT/build}"
@@ -33,6 +35,9 @@ CONTOURS_100M_NDJSON="$BUILD_DIR/contours-100m.ndjson"
 CONTOURS_500M_NDJSON="$BUILD_DIR/contours-500m.ndjson"
 CONTOURS_100M_SIMPLIFIED_NDJSON="$BUILD_DIR/contours-100m.simplified.ndjson"
 CONTOURS_500M_SIMPLIFIED_NDJSON="$BUILD_DIR/contours-500m.simplified.ndjson"
+TILES_10M_MBTILES="$BUILD_DIR/contours-10m.mbtiles"
+TILES_100M_MBTILES="$BUILD_DIR/contours-100m.mbtiles"
+TILES_500M_MBTILES="$BUILD_DIR/contours-500m.mbtiles"
 
 step_build_vrt() {
   echo "[1/6] VRT統合: $INPUT_DIR 配下のGeoTIFFを $MERGED_VRT に統合します"
@@ -66,7 +71,18 @@ step_simplify_and_smooth() {
 }
 
 step_generate_tiles() {
-  echo "[4/6] ズームレベル別MVTタイル生成: 未実装（Issue #5で実装予定）"
+  echo "[4/6] ズームレベル別MVTタイル生成: 10m→z14, 100m→z11-13, 500m→z7-10 でMBTilesを生成します"
+
+  generate_tiles "$CONTOURS_10M_NDJSON" "$TILES_10M_MBTILES" 14 14
+  verify_mbtiles_zoom_range "$TILES_10M_MBTILES" 14 14
+
+  generate_tiles "$CONTOURS_100M_SIMPLIFIED_NDJSON" "$TILES_100M_MBTILES" 11 13
+  verify_mbtiles_zoom_range "$TILES_100M_MBTILES" 11 13
+
+  generate_tiles "$CONTOURS_500M_SIMPLIFIED_NDJSON" "$TILES_500M_MBTILES" 7 10
+  verify_mbtiles_zoom_range "$TILES_500M_MBTILES" 7 10
+
+  echo "[4/6] ズームレベル別MVTタイル生成: 完了（$TILES_10M_MBTILES, $TILES_100M_MBTILES, $TILES_500M_MBTILES）"
 }
 
 step_merge_tiles() {

@@ -13,6 +13,7 @@ REQUIRED_COMMANDS=(
   tile-join
   pmtiles
   python3
+  sqlite3
 )
 
 # 等高線の自己交差判定・距離計算をGEOS経由で高速に行うために使用する

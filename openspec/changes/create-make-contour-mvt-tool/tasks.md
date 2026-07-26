@@ -26,11 +26,11 @@
 
 ## 5. タイル生成ステップ (Issue: #5)
 
-- [ ] 5.1 10m間隔ndjson（未簡略化）からtippecanoeでz14のみのMBTilesを生成する処理を実装する
-- [ ] 5.2 簡略化・平滑化済み100m間隔ndjsonからtippecanoeでz11-z13のMBTilesを生成する処理を実装する
-- [ ] 5.3 簡略化・平滑化済み500m間隔ndjsonからtippecanoeでz7-z10のMBTilesを生成する処理を実装する
-- [ ] 5.4 tippecanoeの内部簡略化が事前のChaikin平滑化結果を過度に劣化させないか確認し、必要に応じてtippecanoeオプション（簡略化抑制系フラグ）を調整する
-- [ ] 5.5 生成した3つのMBTilesそれぞれのメタデータ（minzoom/maxzoom）が意図通りであることを確認する
+- [x] 5.1 10m間隔ndjson（未簡略化）からtippecanoeでz14のみのMBTilesを生成する処理を実装する
+- [x] 5.2 簡略化・平滑化済み100m間隔ndjsonからtippecanoeでz11-z13のMBTilesを生成する処理を実装する
+- [x] 5.3 簡略化・平滑化済み500m間隔ndjsonからtippecanoeでz7-z10のMBTilesを生成する処理を実装する
+- [x] 5.4 tippecanoeの内部簡略化が事前のChaikin平滑化結果を過度に劣化させないか確認し、必要に応じてtippecanoeオプション（簡略化抑制系フラグ）を調整する
+- [x] 5.5 生成した3つのMBTilesそれぞれのメタデータ（minzoom/maxzoom）が意図通りであることを確認する
 
 ## 6. MBTiles統合とPMTiles変換 (Issue: #6)
 
