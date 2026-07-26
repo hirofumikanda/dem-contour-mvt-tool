@@ -6,6 +6,14 @@ set -euo pipefail
 
 SIMPLIFY_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# デフォルト値はサンプルデータ(tif/)で生成したPMTilesを確認して決定した。
+# 100mより500mの方が低いズーム帯(z7-10)で使われるため、より強い簡略化(残す頂点の
+# 割合を小さく)にしている。Chaikin反復回数は、合成した直角コーナーの折れ線で
+# 検証した際に2回で90°の角を約153°まで緩和できており(tests/test_simplify_and_smooth.sh)、
+# 意図した「角張らない滑らかな形状」を満たすため2とした。反復回数を増やすほど
+# chaikin_smooth.pyの頂点数予算チェック(--budget-ndjson)で反復回数が自動的に
+# 抑制される小さいラインが増えるため、むやみに増やしても効果が出にくい。
+# 詳しい経緯はopenspec/changes/create-make-contour-mvt-tool/design.mdのDecisionsを参照。
 SIMPLIFY_PERCENTAGE_100M="${SIMPLIFY_PERCENTAGE_100M:-20%}"
 SIMPLIFY_PERCENTAGE_500M="${SIMPLIFY_PERCENTAGE_500M:-8%}"
 CHAIKIN_ITERATIONS="${CHAIKIN_ITERATIONS:-2}"
