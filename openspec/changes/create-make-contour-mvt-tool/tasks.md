@@ -1,8 +1,8 @@
 ## 1. プロジェクト基盤整備 (Issue: #1)
 
-- [ ] 1.1 スクリプト置き場（例: `bin/` または `scripts/`）と中間生成物置き場（`build/`）のディレクトリ構成を決めて作成する
-- [ ] 1.2 依存CLIツール（gdalbuildvrt, gdal_contour, mapshaper, tippecanoe, tile-join, pmtiles, python3）の存在チェックを行う簡易スクリプトを用意する
-- [ ] 1.3 パイプライン全体を通しで実行するエントリーポイント（例: `make-contour-pmtiles.sh`）の骨格を作成し、各ステップを順に呼び出す構造にする
+- [x] 1.1 スクリプト置き場（例: `bin/` または `scripts/`）と中間生成物置き場（`build/`）のディレクトリ構成を決めて作成する
+- [x] 1.2 依存CLIツール（gdalbuildvrt, gdal_contour, mapshaper, tippecanoe, tile-join, pmtiles, python3）の存在チェックを行う簡易スクリプトを用意する
+- [x] 1.3 パイプライン全体を通しで実行するエントリーポイント（例: `make-contour-pmtiles.sh`）の骨格を作成し、各ステップを順に呼び出す構造にする
 
 ## 2. VRT統合ステップ (Issue: #2)
 

@@ -1,2 +1,4 @@
 tif/
 .claude/
+build/*
+!build/.gitkeep
