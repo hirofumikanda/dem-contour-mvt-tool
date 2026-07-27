@@ -18,6 +18,13 @@ SIMPLIFY_PERCENTAGE_100M="${SIMPLIFY_PERCENTAGE_100M:-20%}"
 SIMPLIFY_PERCENTAGE_500M="${SIMPLIFY_PERCENTAGE_500M:-8%}"
 CHAIKIN_ITERATIONS="${CHAIKIN_ITERATIONS:-2}"
 
+# Chaikin平滑化は反復ごとに頂点数をほぼ2倍にし、その大半は滑らかな曲線を折れ線近似
+# するための冗長なほぼ共線点である。この冗長頂点を間引くため、Chaikin平滑化の直後に
+# もう一段Visvalingam簡略化を適用する。25%は平滑化で作った丸みの大部分を保持したまま
+# 頂点数を減らす保守的な値として選んだ（詳しい経緯はopenspec/changes/
+# add-post-smooth-simplify/design.mdのDecisionsを参照）。
+SIMPLIFY_PERCENTAGE_POST_SMOOTH="${SIMPLIFY_PERCENTAGE_POST_SMOOTH:-25%}"
+
 # mapshaper_simplify <input_ndjson> <output_ndjson> <percentage>
 # mapshaperのWeighted Visvalingam簡略化を適用する。mapshaperはGeoJSON
 # FeatureCollectionでしか書き出せないため、1行1FeatureのGeoJSONSeqへ変換して書き戻す。
@@ -88,21 +95,24 @@ verify_simplification() {
   python3 "$SIMPLIFY_LIB_DIR/verify_simplification.py" "$original_ndjson" "$result_ndjson"
 }
 
-# simplify_and_smooth <input_ndjson> <output_ndjson> <percentage> [iterations]
-# 簡略化（mapshaper Weighted Visvalingam）→平滑化（Chaikin）の順で適用し、
-# 結果を検証する。
+# simplify_and_smooth <input_ndjson> <output_ndjson> <percentage> [iterations] [post_smooth_percentage]
+# 簡略化（mapshaper Weighted Visvalingam）→平滑化（Chaikin）→簡略化（mapshaper
+# Weighted Visvalingam、Chaikinで増えた冗長頂点の間引き）の順で適用し、結果を検証する。
 simplify_and_smooth() {
   local input_ndjson="$1"
   local output_ndjson="$2"
   local percentage="$3"
   local iterations="${4:-$CHAIKIN_ITERATIONS}"
+  local post_smooth_percentage="${5:-$SIMPLIFY_PERCENTAGE_POST_SMOOTH}"
 
-  local tmp_simplified
+  local tmp_simplified tmp_smoothed
   tmp_simplified="$(mktemp --suffix=.ndjson)"
+  tmp_smoothed="$(mktemp --suffix=.ndjson)"
 
   mapshaper_simplify "$input_ndjson" "$tmp_simplified" "$percentage"
-  chaikin_smooth_ndjson "$tmp_simplified" "$output_ndjson" "$iterations" "$input_ndjson"
-  rm -f "$tmp_simplified"
+  chaikin_smooth_ndjson "$tmp_simplified" "$tmp_smoothed" "$iterations" "$input_ndjson"
+  mapshaper_simplify "$tmp_smoothed" "$output_ndjson" "$post_smooth_percentage"
+  rm -f "$tmp_simplified" "$tmp_smoothed"
 
   verify_simplification "$input_ndjson" "$output_ndjson"
 }

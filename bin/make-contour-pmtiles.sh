@@ -19,6 +19,8 @@
 #   ZOOM_MIN_500M/ZOOM_MAX_500M   広域帯のズーム範囲 (デフォルト: 7-10)
 #   SIMPLIFY_PERCENTAGE_100M/500M  Visvalingam簡略化で保持する頂点の割合 (デフォルト: 20%/8%)
 #   CHAIKIN_ITERATIONS       Chaikin平滑化の反復回数 (デフォルト: 2)
+#   SIMPLIFY_PERCENTAGE_POST_SMOOTH  Chaikin平滑化後に適用する2回目のVisvalingam簡略化で
+#                             保持する頂点の割合 (デフォルト: 25%)
 #   CONTOURS_LAYER_NAME       MVTのレイヤー名 (デフォルト: contours)
 
 set -euo pipefail
