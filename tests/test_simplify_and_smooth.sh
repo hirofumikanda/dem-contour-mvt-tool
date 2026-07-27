@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
-# bin/lib/simplify-and-smooth.sh (Visvalingam簡略化 + Chaikin平滑化) の動作を検証するテスト。
+# bin/lib/simplify-and-smooth.sh (Visvalingam簡略化 → Chaikin平滑化 → Visvalingam簡略化)
+# の動作を検証するテスト。
 #
 # 1. 意図的に角張った合成ラインに対して simplify_and_smooth を適用し、頂点数の減少・
 #    角度の緩和（より鈍角になること）・始終点の座標保持を、具体的な座標値で検証する。
+#    あわせて、Chaikin平滑化直後（後段のVisvalingam簡略化を適用する前）の中間状態と
+#    比較し、後段簡略化が頂点数をさらに減らすこと、および簡略化・平滑化前の元の
+#    入力と比べて最終出力でも角張りが緩和されたままであることを検証する。
 # 2. 実サンプルGeoTIFFから抽出した実際の100m/500m間隔の等高線ndjsonに対して
 #    simplify_and_smooth を適用し、頂点数が減少し自己交差が発生しないことを検証する。
 # 3. パイプラインの10m間隔ndjsonが、このステップを経ても元データと完全に一致する
@@ -100,27 +104,45 @@ PY
 }
 
 test_synthetic_angular_line_is_simplified_and_smoothed() {
-  local fixture result
+  local fixture result chaikin_intermediate visvalingam_intermediate
   fixture="$TMP_DIR/angular.ndjson"
   result="$TMP_DIR/angular.result.ndjson"
+  visvalingam_intermediate="$TMP_DIR/angular.visvalingam-intermediate.ndjson"
+  chaikin_intermediate="$TMP_DIR/angular.chaikin-intermediate.ndjson"
 
   make_angular_fixture "$fixture"
 
   simplify_and_smooth "$fixture" "$result" "$SIMPLIFY_PERCENTAGE_100M" "$CHAIKIN_ITERATIONS" \
     || fail "simplify_and_smooth failed on the synthetic angular fixture"
 
-  local orig_count new_count
+  # simplify_and_smooth内部と同じ手順（簡略化→平滑化）を独立に再現し、後段の
+  # 2回目Visvalingam簡略化を適用する前の中間状態（頂点数・角度）と比較できるようにする。
+  mapshaper_simplify "$fixture" "$visvalingam_intermediate" "$SIMPLIFY_PERCENTAGE_100M" \
+    || fail "setup: mapshaper_simplify failed while reproducing the pre-post-smooth-simplify intermediate"
+  chaikin_smooth_ndjson "$visvalingam_intermediate" "$chaikin_intermediate" "$CHAIKIN_ITERATIONS" "$fixture" \
+    || fail "setup: chaikin_smooth_ndjson failed while reproducing the pre-post-smooth-simplify intermediate"
+
+  local orig_count chaikin_count new_count
   orig_count="$(vertex_count_of "$fixture")"
+  chaikin_count="$(vertex_count_of "$chaikin_intermediate")"
   new_count="$(vertex_count_of "$result")"
   if [ "$new_count" -ge "$orig_count" ]; then
     fail "expected vertex count to decrease for the synthetic fixture (original=$orig_count, result=$new_count)"
   fi
+  if [ "$new_count" -ge "$chaikin_count" ]; then
+    fail "expected the post-smooth Visvalingam pass to further reduce vertex count below the Chaikin-only intermediate (chaikin-only=$chaikin_count, final=$new_count)"
+  fi
 
+  # 後段のVisvalingam簡略化は、頂点間の実効面積が小さい点を優先的に間引くため、
+  # Chaikin平滑化直後の中間状態(chaikin_intermediate)と比べると最小角度が多少縮む
+  # ことはある（コーナー近傍の点が間引かれるため。上で使うのは頂点数比較のみ）。
+  # ここで検証すべきは、簡略化・平滑化前の元の角張った入力と比べて、後段簡略化を
+  # 経た最終出力でも角張りが緩和されたままであること。
   local orig_angle new_angle
   orig_angle="$(min_turn_angle "$fixture")"
   new_angle="$(min_turn_angle "$result")"
   if ! python3 -c "import sys; sys.exit(0 if float('$new_angle') > float('$orig_angle') else 1)"; then
-    fail "expected sharpest corner to become less acute (original min angle=$orig_angle deg, result min angle=$new_angle deg)"
+    fail "expected sharpest corner to remain less acute than the original even after the post-smooth simplify pass (original min angle=$orig_angle deg, final min angle=$new_angle deg)"
   fi
 
   local orig_endpoints new_endpoints
@@ -226,7 +248,7 @@ test_verify_simplification_rejects_vertex_count_increase
 echo "PASS: verify_simplification rejects output whose vertex count increased (not a rubber stamp)"
 
 test_synthetic_angular_line_is_simplified_and_smoothed
-echo "PASS: simplify_and_smooth reduces vertex count, relaxes the sharpest angle, and preserves endpoints on a synthetic fixture"
+echo "PASS: simplify_and_smooth reduces vertex count (further than the Chaikin-only intermediate), keeps the sharpest angle less acute than the original after the post-smooth simplify pass, and preserves endpoints on a synthetic fixture"
 
 test_real_sample_data_is_simplified_without_self_intersections
 echo "PASS: simplify_and_smooth succeeds (vertex count decreases, no self-intersections) on real 100m/500m sample data"
