@@ -15,5 +15,5 @@
 
 ## 3. 動作確認 (Issue: #21)
 
-- [ ] 3.1 `bin/make-contour-pmtiles.sh`を`tif/`のサンプルデータでエンドツーエンド実行し、`SIMPLIFY_PERCENTAGE_POST_SMOOTH`のデフォルト値で最終PMTilesが生成されることを確認する
-- [ ] 3.2 `SIMPLIFY_PERCENTAGE_POST_SMOOTH`を明示的に指定して実行し、値を変えると後段簡略化の効き方（最終頂点数）が変わることを確認する
+- [x] 3.1 `bin/make-contour-pmtiles.sh`を`tif/`のサンプルデータでエンドツーエンド実行し、`SIMPLIFY_PERCENTAGE_POST_SMOOTH`のデフォルト値で最終PMTilesが生成されることを確認する
+- [x] 3.2 `SIMPLIFY_PERCENTAGE_POST_SMOOTH`を明示的に指定して実行し、値を変えると後段簡略化の効き方（最終頂点数）が変わることを確認する
