@@ -7,10 +7,10 @@
 
 ## 2. スワイプ比較UIの移植 (Issue: #29)
 
-- [ ] 2.1 `hirofumikanda/maplibre-swipe`の`src/maplibre-gl-compare.js`と`maplibre-gl-compare.css`を`viewer/src/`にベンダリングする
-- [ ] 2.2 `viewer/src/main.js`で`pmtiles`の`Protocol`を`maplibregl.addProtocol("pmtiles", ...)`に登録する
-- [ ] 2.3 `main.js`で自作コンタースタイルを使う`beforeMap`とGSI `std.json`スタイルを使う`afterMap`を作成し、`maplibregl.Compare`でスワイプ結合する
-- [ ] 2.4 2つの地図の初期中心・ズームを`build/contours.pmtiles`のデータ範囲（富士山周辺、z14相当）に合わせる
+- [x] 2.1 `hirofumikanda/maplibre-swipe`の`src/maplibre-gl-compare.js`と`maplibre-gl-compare.css`を`viewer/src/`にベンダリングする
+- [x] 2.2 `viewer/src/main.js`で`pmtiles`の`Protocol`を`maplibregl.addProtocol("pmtiles", ...)`に登録する
+- [x] 2.3 `main.js`で自作コンタースタイルを使う`beforeMap`とGSI `std.json`スタイルを使う`afterMap`を作成し、`maplibregl.Compare`でスワイプ結合する
+- [x] 2.4 2つの地図の初期中心・ズームを`build/contours.pmtiles`のデータ範囲（富士山周辺、z14相当）に合わせる
 
 ## 3. 自作等高線PMTilesの配信 (Issue: #26)
 
