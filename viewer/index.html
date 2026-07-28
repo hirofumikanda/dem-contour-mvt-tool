@@ -27,7 +27,14 @@
         width: 100%;
       }
 
-      .map {
+      /*
+       * ID selectors (not .map) so this reliably outranks maplibre-gl.css's
+       * `.maplibregl-map { position: relative }` regardless of stylesheet
+       * load order (maplibre-gl.css is injected via a JS import, after this
+       * inline <style> block).
+       */
+      #before,
+      #after {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -38,8 +45,9 @@
 
   <body>
     <div id="comparison-container">
-      <div id="before" class="map"></div>
-      <div id="after" class="map"></div>
+      <div id="before"></div>
+      <div id="after"></div>
     </div>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>
