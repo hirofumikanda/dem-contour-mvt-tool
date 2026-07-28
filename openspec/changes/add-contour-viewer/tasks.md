@@ -19,10 +19,10 @@
 
 ## 4. 自作コンタースタイルの作成 (Issue: #27)
 
-- [ ] 4.1 `gsi-cyberjapan/optimal_bvmap`の`style/std.json`から`等高線`/`等高線数値部`レイヤーの定義を確認し、線色（`rgb(200,160,60)`）を控える
-- [ ] 4.2 `viewer/src/styles/contours.json`を作成し、`sources`に`pmtiles://./contours.pmtiles`を指すベクトルソース（レイヤー名`contours`）を定義する
-- [ ] 4.3 z7-10（500m間隔）・z11-13（100m間隔、`elevation % 500 == 0`を計曲線）・z14（10m間隔、`elevation % 50 == 0`を計曲線）でズーム帯ごとに線幅を切り替えるlineレイヤーを定義する
-- [ ] 4.4 計曲線に該当する等高線に`elevation`属性を`line-center`配置で表示するsymbolレイヤーを定義する
+- [x] 4.1 `gsi-cyberjapan/optimal_bvmap`の`style/std.json`から`等高線`/`等高線数値部`レイヤーの定義を確認し、線色（`rgb(200,160,60)`）を控える
+- [x] 4.2 `viewer/src/styles/contours.json`を作成し、`sources`に`pmtiles://./contours.pmtiles`を指すベクトルソース（レイヤー名`contours`）を定義する
+- [x] 4.3 z7-10（500m間隔）・z11-13（100m間隔、`elevation % 500 == 0`を計曲線）・z14（10m間隔、`elevation % 50 == 0`を計曲線）でズーム帯ごとに線幅を切り替えるlineレイヤーを定義する
+- [x] 4.4 計曲線に該当する等高線に`elevation`属性を`line-center`配置で表示するsymbolレイヤーを定義する
 
 ## 5. GSI最適化ベクトルタイルスタイルの取り込み (Issue: #28)
 

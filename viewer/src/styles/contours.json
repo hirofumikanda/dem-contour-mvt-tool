@@ -1,0 +1,94 @@
+{
+  "version": 8,
+  "name": "contours",
+  "glyphs": "https://gsi-cyberjapan.github.io/optimal_bvmap/glyphs/{fontstack}/{range}.pbf",
+  "sources": {
+    "contours": {
+      "type": "vector",
+      "url": "pmtiles://./contours.pmtiles",
+      "attribution": "dem-contour-mvt-tool"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#ffffff"
+      }
+    },
+    {
+      "id": "等高線",
+      "type": "line",
+      "source": "contours",
+      "source-layer": "contours",
+      "paint": {
+        "line-color": "rgb(200,160,60)",
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          7,
+          0.7,
+          10,
+          0.7,
+          11,
+          ["case", ["==", ["%", ["get", "elevation"], 500], 0], 1.4, 0.7],
+          13,
+          ["case", ["==", ["%", ["get", "elevation"], 500], 0], 1.4, 0.7],
+          14,
+          ["case", ["==", ["%", ["get", "elevation"], 50], 0], 1.4, 0.7]
+        ]
+      }
+    },
+    {
+      "id": "等高線数値部-100m",
+      "type": "symbol",
+      "source": "contours",
+      "source-layer": "contours",
+      "minzoom": 11,
+      "maxzoom": 14,
+      "filter": ["==", ["%", ["get", "elevation"], 500], 0],
+      "layout": {
+        "symbol-placement": "line-center",
+        "text-field": ["get", "elevation"],
+        "text-font": ["NotoSansJP-Regular"],
+        "text-size": 13,
+        "text-pitch-alignment": "viewport",
+        "text-rotation-alignment": "map",
+        "text-max-angle": 360,
+        "text-allow-overlap": true,
+        "text-ignore-placement": true
+      },
+      "paint": {
+        "text-color": "rgb(200,160,60)",
+        "text-halo-color": "rgba(255,255,255,1)",
+        "text-halo-width": 1.5
+      }
+    },
+    {
+      "id": "等高線数値部-10m",
+      "type": "symbol",
+      "source": "contours",
+      "source-layer": "contours",
+      "minzoom": 14,
+      "filter": ["==", ["%", ["get", "elevation"], 50], 0],
+      "layout": {
+        "symbol-placement": "line-center",
+        "text-field": ["get", "elevation"],
+        "text-font": ["NotoSansJP-Regular"],
+        "text-size": 13,
+        "text-pitch-alignment": "viewport",
+        "text-rotation-alignment": "map",
+        "text-max-angle": 360,
+        "text-allow-overlap": true,
+        "text-ignore-placement": true
+      },
+      "paint": {
+        "text-color": "rgb(200,160,60)",
+        "text-halo-color": "rgba(255,255,255,1)",
+        "text-halo-width": 1.5
+      }
+    }
+  ]
+}
