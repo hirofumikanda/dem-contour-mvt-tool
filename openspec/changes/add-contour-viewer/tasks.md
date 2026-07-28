@@ -1,9 +1,9 @@
 ## 1. プロジェクト雛形の作成 (Issue: #25)
 
-- [ ] 1.1 `viewer/`ディレクトリを作成し、`package.json`（`type: module`、`dev`/`build`/`preview`スクリプト、依存`maplibre-gl`・`pmtiles`、devDependency`vite`）を追加する
-- [ ] 1.2 `viewer/vite.config.js`を追加する
-- [ ] 1.3 `viewer/index.html`を追加し、`#comparison-container`配下に`#before`/`#after`の地図コンテナを配置する
-- [ ] 1.4 `viewer/.gitignore`（`node_modules`、`dist`等）を追加する
+- [x] 1.1 `viewer/`ディレクトリを作成し、`package.json`（`type: module`、`dev`/`build`/`preview`スクリプト、依存`maplibre-gl`・`pmtiles`、devDependency`vite`）を追加する
+- [x] 1.2 `viewer/vite.config.js`を追加する
+- [x] 1.3 `viewer/index.html`を追加し、`#comparison-container`配下に`#before`/`#after`の地図コンテナを配置する
+- [x] 1.4 `viewer/.gitignore`（`node_modules`、`dist`等）を追加する
 
 ## 2. スワイプ比較UIの移植 (Issue: #29)
 
