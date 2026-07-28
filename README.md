@@ -78,6 +78,12 @@ INPUT_DIR=/path/to/geotiffs BUILD_DIR=/path/to/output bin/make-contour-pmtiles.s
 | `contours.mbtiles` | 統合MBTiles（z7-z14） |
 | `contours.pmtiles` | **最終成果物**（z7-z14） |
 
+## ビューワ
+
+`viewer/`配下に、生成した等高線PMTilesをMapLibre GL JSで描画し、国土地理院最適化ベクトルタイルとスワイプ比較できるブラウザビューワがあります。
+
+`viewer/public/contours.pmtiles`は`build/contours.pmtiles`へのシンボリックリンクとして配信されるため、**`viewer`を起動する前に`bin/make-contour-pmtiles.sh`を実行し、`build/contours.pmtiles`を生成しておく必要があります**。`build/contours.pmtiles`が存在しない状態でビューワを起動すると、このシンボリックリンクがリンク切れとなり、自作等高線のPMTilesソースを読み込めません。
+
 ## テスト
 
 ```bash
