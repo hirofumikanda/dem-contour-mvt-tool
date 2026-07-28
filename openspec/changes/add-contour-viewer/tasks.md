@@ -14,8 +14,8 @@
 
 ## 3. 自作等高線PMTilesの配信 (Issue: #26)
 
-- [ ] 3.1 `viewer/public/contours.pmtiles`を`../../build/contours.pmtiles`へのシンボリックリンクとして作成する
-- [ ] 3.2 `build/contours.pmtiles`が存在しない場合の挙動（開発サーバー起動前提条件）をREADMEに明記する
+- [x] 3.1 `viewer/public/contours.pmtiles`を`../../build/contours.pmtiles`へのシンボリックリンクとして作成する
+- [x] 3.2 `build/contours.pmtiles`が存在しない場合の挙動（開発サーバー起動前提条件）をREADMEに明記する
 
 ## 4. 自作コンタースタイルの作成 (Issue: #27)
 
