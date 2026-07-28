@@ -82,6 +82,20 @@ INPUT_DIR=/path/to/geotiffs BUILD_DIR=/path/to/output bin/make-contour-pmtiles.s
 
 `viewer/`配下に、生成した等高線PMTilesをMapLibre GL JSで描画し、国土地理院最適化ベクトルタイルとスワイプ比較できるブラウザビューワがあります。
 
+### 使い方
+
+```bash
+# 1. 等高線PMTilesを生成（未生成の場合）
+bin/make-contour-pmtiles.sh
+
+# 2. ビューワの依存パッケージをインストールして起動
+cd viewer
+npm install
+npm run dev
+```
+
+表示されたローカルURL（デフォルト`http://localhost:5173/`）をブラウザで開くと、左に自作の等高線PMTiles、右に国土地理院最適化ベクトルタイル（`std.json`スタイル）が表示され、中央のハンドルをドラッグしてスワイプ比較できます。一方の地図をパン・ズームすると、もう一方も追従します。
+
 `viewer/public/contours.pmtiles`は`build/contours.pmtiles`へのシンボリックリンクとして配信されるため、**`viewer`を起動する前に`bin/make-contour-pmtiles.sh`を実行し、`build/contours.pmtiles`を生成しておく必要があります**。`build/contours.pmtiles`が存在しない状態でビューワを起動すると、このシンボリックリンクがリンク切れとなり、自作等高線のPMTilesソースを読み込めません。
 
 比較対象の国土地理院最適化ベクトルタイルは、[gsi-cyberjapan/optimal_bvmap](https://github.com/gsi-cyberjapan/optimal_bvmap)が配布する`style/std.json`をそのまま`viewer/src/styles/gsi_std.json`としてローカル複製したものを使用しています（`glyphs`/`sprite`/タイル本体は同スタイル内の絶対URLをそのまま参照するため追加のベンダリングはしていません）。複製元が更新された場合は、以下のコマンドで再取得してください。
