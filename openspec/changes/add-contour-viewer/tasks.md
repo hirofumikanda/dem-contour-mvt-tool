@@ -26,8 +26,8 @@
 
 ## 5. GSI最適化ベクトルタイルスタイルの取り込み (Issue: #28)
 
-- [ ] 5.1 `gsi-cyberjapan/optimal_bvmap`の`style/std.json`を取得し、`viewer/src/styles/gsi_std.json`としてリポジトリにローカル複製する
-- [ ] 5.2 複製元URLと再取得手順をREADMEまたはスタイルファイル近傍に記録する
+- [x] 5.1 `gsi-cyberjapan/optimal_bvmap`の`style/std.json`を取得し、`viewer/src/styles/gsi_std.json`としてリポジトリにローカル複製する
+- [x] 5.2 複製元URLと再取得手順をREADMEまたはスタイルファイル近傍に記録する
 
 ## 6. 動作確認とドキュメント (Issue: #30)
 

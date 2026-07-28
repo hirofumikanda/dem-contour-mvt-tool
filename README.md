@@ -84,6 +84,13 @@ INPUT_DIR=/path/to/geotiffs BUILD_DIR=/path/to/output bin/make-contour-pmtiles.s
 
 `viewer/public/contours.pmtiles`は`build/contours.pmtiles`へのシンボリックリンクとして配信されるため、**`viewer`を起動する前に`bin/make-contour-pmtiles.sh`を実行し、`build/contours.pmtiles`を生成しておく必要があります**。`build/contours.pmtiles`が存在しない状態でビューワを起動すると、このシンボリックリンクがリンク切れとなり、自作等高線のPMTilesソースを読み込めません。
 
+比較対象の国土地理院最適化ベクトルタイルは、[gsi-cyberjapan/optimal_bvmap](https://github.com/gsi-cyberjapan/optimal_bvmap)が配布する`style/std.json`をそのまま`viewer/src/styles/gsi_std.json`としてローカル複製したものを使用しています（`glyphs`/`sprite`/タイル本体は同スタイル内の絶対URLをそのまま参照するため追加のベンダリングはしていません）。複製元が更新された場合は、以下のコマンドで再取得してください。
+
+```bash
+curl -o viewer/src/styles/gsi_std.json \
+  https://raw.githubusercontent.com/gsi-cyberjapan/optimal_bvmap/main/style/std.json
+```
+
 ## テスト
 
 ```bash
