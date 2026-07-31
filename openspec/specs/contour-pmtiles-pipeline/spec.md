@@ -25,7 +25,7 @@ TBD - created by archiving change create-make-contour-mvt-tool. Update Purpose a
 - **THEN** 10m間隔・100m間隔・500m間隔それぞれに対応する3つのndjsonファイルが生成され、各ファイルの各行が標高値属性を持つ有効なGeoJSON Featureとしてパースできる
 
 ### Requirement: 100m・500m等高線の簡略化・平滑化
-本ツールは、100m間隔および500m間隔の等高線ndjsonに対して、Visvalingam法によるライン簡略化、角の丸め（Chaikin法によるコーナーカット平滑化）、そしてChaikin平滑化で増えた冗長頂点を間引くための2回目のVisvalingam法によるライン簡略化を、この順で適用し、簡略化後も滑らかな形状を保った簡略化済みndjsonを生成しなければならない（SHALL）。10m間隔の等高線ndjsonに対してはこの簡略化・平滑化処理を適用してはならない（SHALL NOT）。
+本ツールは、100m間隔および500m間隔の等高線ndjsonに対して、Visvalingam法によるライン簡略化、角の丸め（Chaikin法によるコーナーカット平滑化）、そしてChaikin平滑化で増えた冗長頂点を間引くための2回目のVisvalingam法によるライン簡略化を、この順で適用し、簡略化後も滑らかな形状を保った簡略化済みndjsonを生成しなければならない（SHALL）。10m間隔の等高線ndjsonに対してはこの簡略化・平滑化処理を適用してはならない（SHALL NOT）。この3段階処理（1回目のVisvalingam簡略化、Chaikin平滑化、2回目のVisvalingam簡略化）それぞれの強さを制御するデフォルト値（保持する頂点の割合・反復回数）は、タイル化されるズームレベルがz13以下となる100m間隔（z11-13）・500m間隔（z7-10）の等高線について、国土地理院が配布する最適化ベクトルタイルの等高線表現の形状に近似するように決定されなければならない（SHALL）。
 
 #### Scenario: 100m間隔の等高線を簡略化・平滑化・再簡略化する
 - **WHEN** 100m間隔の等高線ndjsonに対して簡略化処理を実行する
@@ -42,6 +42,10 @@ TBD - created by archiving change create-make-contour-mvt-tool. Update Purpose a
 #### Scenario: 10m間隔の等高線は簡略化しない
 - **WHEN** 10m間隔の等高線ndjsonに対してパイプラインを実行する
 - **THEN** タイル生成に使用される10m間隔のndjsonは、簡略化・平滑化処理を経ていない元の等高線データと一致する
+
+#### Scenario: デフォルト値が国土地理院最適化ベクトルタイルとの比較で決定されている
+- **WHEN** デフォルト値（`SIMPLIFY_PERCENTAGE_100M`, `SIMPLIFY_PERCENTAGE_500M`, `CHAIKIN_ITERATIONS`, `SIMPLIFY_PERCENTAGE_POST_SMOOTH`）で生成したPMTilesを、`viewer`で国土地理院最適化ベクトルタイル（`std.json`）とz11・z13（100m帯の両端）およびz7・z10（500m帯の両端）でスワイプ比較する
+- **THEN** 自作等高線の形状が国土地理院最適化ベクトルタイルの等高線表現に近似しており、かつその近似度の判断根拠（比較したズーム・地物・優先した観点）がREADMEの「デフォルトパラメータの決定理由」に記録されている
 
 ### Requirement: ズームレベル対応MVT/MBTiles生成
 本ツールは、10m間隔の等高線からズームレベル14、100m間隔の等高線からズームレベル11〜13、500m間隔の等高線からズームレベル7〜10のMVT（Mapbox Vector Tile）を生成し、それぞれをMBTiles形式のファイルとしてアーカイブしなければならない（SHALL）。
