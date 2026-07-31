@@ -10,9 +10,9 @@
 
 ## 3. 500m帯（z7-10）のパラメータ調整と最終値決定 (Issue: #40)
 
-- [ ] 3.1 `SIMPLIFY_PERCENTAGE_500M`（1回目のVisvalingam簡略化）を候補値に変えて`bin/make-contour-pmtiles.sh`を再実行し、`viewer`でz7・z10を国土地理院最適化ベクトルタイルと比較する
-- [ ] 3.2 `CHAIKIN_ITERATIONS`・`SIMPLIFY_PERCENTAGE_POST_SMOOTH`は100m帯と共有パラメータのため、2章で暫定決定した値のまま500m帯でも許容できる見た目になっているか確認する。許容できない場合は100m帯・500m帯双方を見比べながら妥協点を再調整する
-- [ ] 3.3 4パラメータの最終値を決定する
+- [x] 3.1 `SIMPLIFY_PERCENTAGE_500M`（1回目のVisvalingam簡略化）を候補値に変えて`bin/make-contour-pmtiles.sh`を再実行し、`viewer`でz7・z10を国土地理院最適化ベクトルタイルと比較する
+- [x] 3.2 `CHAIKIN_ITERATIONS`・`SIMPLIFY_PERCENTAGE_POST_SMOOTH`は100m帯と共有パラメータのため、2章で暫定決定した値のまま500m帯でも許容できる見た目になっているか確認する。許容できない場合は100m帯・500m帯双方を見比べながら妥協点を再調整する
+- [x] 3.3 4パラメータの最終値を決定する
 
 ## 4. デフォルト値・ドキュメントの更新 (Issue: #41)
 
