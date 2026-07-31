@@ -1,7 +1,7 @@
 ## 1. 現状把握とベースライン比較 (Issue: #38)
 
-- [ ] 1.1 `bin/make-contour-pmtiles.sh`をデフォルト値のまま`tif/`のサンプルデータで実行し、`build/contours.pmtiles`を生成する
-- [ ] 1.2 `viewer`の開発サーバーを起動し、z11・z13（100m帯の両端）およびz7・z10（500m帯の両端）で、自作等高線と国土地理院最適化ベクトルタイル（`std.json`）をスワイプ比較し、現状のデフォルト値（`SIMPLIFY_PERCENTAGE_100M=20%`, `SIMPLIFY_PERCENTAGE_500M=8%`, `CHAIKIN_ITERATIONS=2`, `SIMPLIFY_PERCENTAGE_POST_SMOOTH=25%`）で見られる差異（角張り過多／丸め過ぎ、頂点密度の違いなど）を書き出す
+- [x] 1.1 `bin/make-contour-pmtiles.sh`をデフォルト値のまま`tif/`のサンプルデータで実行し、`build/contours.pmtiles`を生成する
+- [x] 1.2 `viewer`の開発サーバーを起動し、z11・z13（100m帯の両端）およびz7・z10（500m帯の両端）で、自作等高線と国土地理院最適化ベクトルタイル（`std.json`）をスワイプ比較し、現状のデフォルト値（`SIMPLIFY_PERCENTAGE_100M=20%`, `SIMPLIFY_PERCENTAGE_500M=8%`, `CHAIKIN_ITERATIONS=2`, `SIMPLIFY_PERCENTAGE_POST_SMOOTH=25%`）で見られる差異（角張り過多／丸め過ぎ、頂点密度の違いなど）を書き出す
 
 ## 2. 100m帯（z11-13）のパラメータ調整 (Issue: #39)
 
