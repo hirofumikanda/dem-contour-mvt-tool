@@ -14,6 +14,16 @@ SIMPLIFY_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # chaikin_smooth.pyの頂点数予算チェック(--budget-ndjson)で反復回数が自動的に
 # 抑制される小さいラインが増えるため、むやみに増やしても効果が出にくい。
 # 詳しい経緯はopenspec/changes/create-make-contour-mvt-tool/design.mdのDecisionsを参照。
+#
+# その後、国土地理院最適化ベクトルタイル(viewerでのスワイプ比較)を基準にこれらの値の
+# 妥当性を再検証したが、この4つのデフォルト値を変更する根拠は見つからなかった
+# (SIMPLIFY_PERCENTAGE_100M/500Mを大きく振ってもz11の等高線の密集具合はほとんど
+# 変わらず、CHAIKIN_ITERATIONSを2から8まで増やしてもz10のレンダリングはピクセル単位で
+# 不変だった)。Weighted Visvalingamはライン内の頂点を間引く処理でありライン本数自体は
+# 減らせないため、密集は主に等高線間隔の選び方に起因し、Chaikinのコーナーカットは
+# 1〜2反復でほぼ収束するため、それ以上反復しても地形データに実在する有意な折れは
+# 丸めきれない。詳しい経緯はopenspec/changes/tune-simplify-smooth-percentages/
+# baseline-comparison.md, 100m-band-tuning.md, 500m-band-tuning.mdを参照。
 SIMPLIFY_PERCENTAGE_100M="${SIMPLIFY_PERCENTAGE_100M:-20%}"
 SIMPLIFY_PERCENTAGE_500M="${SIMPLIFY_PERCENTAGE_500M:-8%}"
 CHAIKIN_ITERATIONS="${CHAIKIN_ITERATIONS:-2}"
@@ -22,7 +32,9 @@ CHAIKIN_ITERATIONS="${CHAIKIN_ITERATIONS:-2}"
 # するための冗長なほぼ共線点である。この冗長頂点を間引くため、Chaikin平滑化の直後に
 # もう一段Visvalingam簡略化を適用する。25%は平滑化で作った丸みの大部分を保持したまま
 # 頂点数を減らす保守的な値として選んだ（詳しい経緯はopenspec/changes/
-# add-post-smooth-simplify/design.mdのDecisionsを参照）。
+# add-post-smooth-simplify/design.mdのDecisionsを参照）。国土地理院最適化ベクトルタイル
+# との比較でも15%〜60%の範囲でレンダリング結果に有意差はなく、25%を変更する根拠は
+# なかった（openspec/changes/tune-simplify-smooth-percentages/を参照）。
 SIMPLIFY_PERCENTAGE_POST_SMOOTH="${SIMPLIFY_PERCENTAGE_POST_SMOOTH:-25%}"
 
 # mapshaper_simplify <input_ndjson> <output_ndjson> <percentage>

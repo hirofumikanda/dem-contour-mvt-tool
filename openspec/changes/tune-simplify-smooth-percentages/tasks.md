@@ -16,11 +16,11 @@
 
 ## 4. デフォルト値・ドキュメントの更新 (Issue: #41)
 
-- [ ] 4.1 `bin/lib/simplify-and-smooth.sh`の4つのデフォルト値（`SIMPLIFY_PERCENTAGE_100M`, `SIMPLIFY_PERCENTAGE_500M`, `CHAIKIN_ITERATIONS`, `SIMPLIFY_PERCENTAGE_POST_SMOOTH`）を最終決定値に更新する
-- [ ] 4.2 `bin/lib/simplify-and-smooth.sh`冒頭のコメント（デフォルト値決定理由）を、国土地理院最適化ベクトルタイルとの比較で決定した旨に更新する
-- [ ] 4.3 `bin/make-contour-pmtiles.sh`のヘッダーコメント（デフォルト値の記載）を最終決定値に更新する
-- [ ] 4.4 README「パラメータ（環境変数）」表のデフォルト値列を最終決定値に更新する
-- [ ] 4.5 README「デフォルトパラメータの決定理由」を、国土地理院最適化ベクトルタイルとどのズーム・地物で比較し何を優先したかを含む内容に書き直す
+- [x] 4.1 `bin/lib/simplify-and-smooth.sh`の4つのデフォルト値（`SIMPLIFY_PERCENTAGE_100M`, `SIMPLIFY_PERCENTAGE_500M`, `CHAIKIN_ITERATIONS`, `SIMPLIFY_PERCENTAGE_POST_SMOOTH`）を最終決定値に更新する（#39, #40の結論により数値は現状のまま変更なし。既に最終決定値と一致していることを確認した）
+- [x] 4.2 `bin/lib/simplify-and-smooth.sh`冒頭のコメント（デフォルト値決定理由）を、国土地理院最適化ベクトルタイルとの比較で決定した旨に更新する
+- [x] 4.3 `bin/make-contour-pmtiles.sh`のヘッダーコメント（デフォルト値の記載）を最終決定値に更新する（数値は変更なしのため、既存記載のままで最終決定値と一致していることを確認した）
+- [x] 4.4 README「パラメータ（環境変数）」表のデフォルト値列を最終決定値に更新する（あわせて表から漏れていた`SIMPLIFY_PERCENTAGE_POST_SMOOTH`の行を追加した）
+- [x] 4.5 README「デフォルトパラメータの決定理由」を、国土地理院最適化ベクトルタイルとどのズーム・地物で比較し何を優先したかを含む内容に書き直す
 
 ## 5. 検証 (Issue: #42)
 
