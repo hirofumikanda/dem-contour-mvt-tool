@@ -53,17 +53,26 @@ INPUT_DIR=/path/to/geotiffs BUILD_DIR=/path/to/output bin/make-contour-pmtiles.s
 | `ZOOM_MIN_10M` / `ZOOM_MAX_10M` | `14` / `14` | 最高詳細帯のズーム範囲 |
 | `ZOOM_MIN_100M` / `ZOOM_MAX_100M` | `11` / `13` | 中間帯のズーム範囲 |
 | `ZOOM_MIN_500M` / `ZOOM_MAX_500M` | `7` / `10` | 広域帯のズーム範囲 |
-| `SIMPLIFY_PERCENTAGE_100M` | `20%` | 100m間隔の等高線に適用するVisvalingam簡略化で保持する頂点の割合 |
-| `SIMPLIFY_PERCENTAGE_500M` | `8%` | 500m間隔の等高線に適用するVisvalingam簡略化で保持する頂点の割合 |
+| `SIMPLIFY_PERCENTAGE_100M` | `20%` | 100m間隔の等高線に適用する1回目のVisvalingam簡略化で保持する頂点の割合 |
+| `SIMPLIFY_PERCENTAGE_500M` | `8%` | 500m間隔の等高線に適用する1回目のVisvalingam簡略化で保持する頂点の割合 |
 | `CHAIKIN_ITERATIONS` | `2` | Chaikin平滑化の反復回数 |
+| `SIMPLIFY_PERCENTAGE_POST_SMOOTH` | `25%` | Chaikin平滑化後に適用する2回目のVisvalingam簡略化で保持する頂点の割合 |
 | `CONTOURS_LAYER_NAME` | `contours` | MVTのレイヤー名 |
 
 ### デフォルトパラメータの決定理由
 
 - **`SIMPLIFY_PERCENTAGE_100M=20%` / `SIMPLIFY_PERCENTAGE_500M=8%`**: 500m間隔はより低いズーム帯（z7-10、広域表示）で使われるため、100m間隔（z11-13）より強い簡略化にしている。値はサンプルデータ（`tif/`配下）で生成したPMTilesを確認して決定した。
 - **`CHAIKIN_ITERATIONS=2`**: 合成した直角コーナー（90°）の折れ線に対する検証（`tests/test_simplify_and_smooth.sh`）で、2回の反復により約153°まで角が緩和されることを確認しており、「角張らない滑らかな形状」という目的を満たしている。また`chaikin_smooth.py`は簡略化前の頂点数を超えないよう反復回数をFeatureごとに自動抑制する仕組み（`--budget-ndjson`）を持つため、デフォルト値を無闇に増やしても既に抑制されがちな小さなラインへの効果は限定的である。
+- **`SIMPLIFY_PERCENTAGE_POST_SMOOTH=25%`**: Chaikin平滑化で増えた冗長頂点を間引きつつ、平滑化で作った丸みの大部分を保持する保守的な値として選んだ。
 
-これらのパラメータの技術的な背景は[`design.md`のDecisionsセクション](openspec/changes/create-make-contour-mvt-tool/design.md)にも記録されている。
+上記4つのデフォルト値は、`viewer`で国土地理院最適化ベクトルタイル（`std.json`）とスワイプ比較しながら妥当性を再検証済みである（z11・z13で100m間隔を、z7・z10で500m間隔を比較。z7はサンプルデータの範囲が実世界で数十km四方しかなく、z7タイル1枚が覆う範囲（中緯度で約300km四方）に対して画面上ほぼ不可視になるため実質的に比較対象外）。検証の結果、この4値を変更する根拠は見つからなかった:
+
+- `SIMPLIFY_PERCENTAGE_100M`/`SIMPLIFY_PERCENTAGE_500M`を大きく振っても（100mは5%〜20%、500mは8%〜95%）、z11・z10で見える等高線の密集具合・角張りはほとんど変化しなかった。Weighted Visvalingam簡略化はライン内の冗長な頂点を間引く処理であり、ライン（等高線）の本数自体を減らすものではないため、急峻な地形で等高線同士が近接する「密集」はこのパラメータでは解消できない。
+- `CHAIKIN_ITERATIONS`を2〜8まで増やしても、`SIMPLIFY_PERCENTAGE_POST_SMOOTH`を15%〜60%まで振っても、z10・z13のレンダリング結果はほぼ変化しなかった。Chaikinのコーナーカットは1〜2反復でほぼ収束するため、それ以上反復しても地形データに実在する有意な折れをそれ以上丸めることはできない。
+
+国土地理院との間に残る見た目の差（低ズーム側の密集・角張り）は、本ツールの簡略化・平滑化パラメータの選び方ではなく、等高線間隔を離散的に切り替える設計や、Visvalingam＋Chaikinという手法自体の限界に起因する構造的な差であると判断し、本パイプラインのスコープでは受け入れることとした。
+
+これらのパラメータの技術的な背景は[`design.md`のDecisionsセクション](openspec/changes/create-make-contour-mvt-tool/design.md)、および国土地理院との比較検証の詳細は[`tune-simplify-smooth-percentages`のbaseline-comparison.md/100m-band-tuning.md/500m-band-tuning.md](openspec/changes/tune-simplify-smooth-percentages/)にも記録されている。
 
 ## 出力物
 
