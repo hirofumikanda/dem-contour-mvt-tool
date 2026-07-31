@@ -5,8 +5,8 @@
 
 ## 2. 100m帯（z11-13）のパラメータ調整 (Issue: #39)
 
-- [ ] 2.1 `SIMPLIFY_PERCENTAGE_100M`（1回目のVisvalingam簡略化）を候補値に変えて`bin/make-contour-pmtiles.sh`を再実行し、`viewer`でz11・z13を国土地理院最適化ベクトルタイルと比較する
-- [ ] 2.2 `CHAIKIN_ITERATIONS`と`SIMPLIFY_PERCENTAGE_POST_SMOOTH`（2回目のVisvalingam簡略化）を候補値に変えて同様に再実行・比較し、100m帯で最も近似した組み合わせを暫定決定する
+- [x] 2.1 `SIMPLIFY_PERCENTAGE_100M`（1回目のVisvalingam簡略化）を候補値に変えて`bin/make-contour-pmtiles.sh`を再実行し、`viewer`でz11・z13を国土地理院最適化ベクトルタイルと比較する
+- [x] 2.2 `CHAIKIN_ITERATIONS`と`SIMPLIFY_PERCENTAGE_POST_SMOOTH`（2回目のVisvalingam簡略化）を候補値に変えて同様に再実行・比較し、100m帯で最も近似した組み合わせを暫定決定する
 
 ## 3. 500m帯（z7-10）のパラメータ調整と最終値決定 (Issue: #40)
 
